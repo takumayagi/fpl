@@ -1,0 +1,11 @@
+build/
+outputs*
+experiments/
+*.swp
+*.bak
+*.log
+*.pyc
+*.so
+*.png
+*.jpg
+*.txt
