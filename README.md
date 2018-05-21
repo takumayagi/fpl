@@ -1,117 +1,97 @@
-# future\_localization: Future localization from second-person view
-This repository provides future localization of person in the scene.
+## Future Person Localization in First-Person Videos (CVPR2018)
+<img src="https://github.com/takumayagi/fpl/blob/image/cvpr18_teaser.png" width="80%" height="80%">
+
+This repository contains the code and data (**caution: no raw image provided**) for the paper ["Future Person Localization in First-Person Videos"](https://arxiv.org/abs/1711.11217) by Takuma Yagi, Karttikeya Mangalam, Ryo Yonetani and Yoichi Sato.
+
+## Prediction examples
+<img src="https://github.com/takumayagi/fpl/blob/image/001.gif" width="20%" height="20%"><img src="https://github.com/takumayagi/fpl/blob/image/002.gif" width="20%" height="20%"><img src="https://github.com/takumayagi/fpl/blob/image/003.gif" width="20%" height="20%"><img src="https://github.com/takumayagi/fpl/blob/image/004.gif" width="20%" height="20%"><img src="https://github.com/takumayagi/fpl/blob/image/005.gif" width="20%" height="20%">
 
 ## Requirements
+We confirmed the code works correctly in below versions.
 
-- GPU environment (recommended)
-- Python 2.7.6+, 3.4.3+, 3.5.1+
-- [Chainer](https://github.com/pfnet/chainer) v2.0.0
-- [ChainerCV](https://github.com/chainer/chainercv) v0.5.1
-- NumPy 1.9, 1.10, 1.11
-- Cython 0.25+
-- OpenCV 3.1+
-- joblib
+- GPU environment
+- Python 3.5.2
+- [Chainer](https://github.com/pfnet/chainer) v4.0.0
+- NumPy 1.13.1
+- Cython 0.25.1
+- OpenCV 3.3.0
+- joblib 0.11
 - mllogger (https://github.com/Signull8192/mllogger)
-- six
-- pandas
-- numpy-quaternion
-- numba
-- python-box
-
-## Main features
-
-- RNN-ED baseline
-- RNN-ED with Scene feature
-- Simple RNN (SRNN) with pose/egomotion/mean flow feature
+- pandas 0.20.3
+- numpy-quaternion 2018.5.17.10.19.59
+- numba 0.36.2
+- python-box 3.2.0
 
 ## Installation
+### Download data
+You can download our dataset from below link:  
+**(caution: no raw image provided!)**  
+[Download link (processed data)](https://drive.google.com/open?id=10_ivX4bEMgJDWhVruZr2bozcuDoTcHZu)
 
-### Setup
+If you wish downloading via terminal, consider using [custom script](https://gist.github.com/darencard/079246e43e3c4b97e373873c6c9a3798).
+
+Extract the downloaded tar.gz file at the root directory.
 ```
-export TRAJ_DATA_DIR=<data directory> >> ~/.bashrc
+tar xvf fpl.tar.gz
 ```
 
-In titanx3, please run commands as follows:
+### Visualization
+Since we cannot release the raw images, we prepared sample visualization video below.  
+The video shows the automatically extracted location histories, poses. The number shown in the bounding box corresponds to the person id in the processed data.    
+Background colors are the result from pre-trained dilated CNN trained with [MIT Scene Parsing Benchmark](http://sceneparsing.csail.mit.edu/).
+<img src="https://github.com/takumayagi/fpl/blob/image/ezgif-1-9c3c383428.gif">  
+[Download link (visualization)](https://drive.google.com/open?id=1fSNN8Yxi3edSHKqg6h1lZEEIqjfexkq2)
+
+### Create dataset
+Run dataset generation script to preprocess raw locations/poses/egomotions.  
+A single processed file will be generated in datasets/.
 ```
-mkdir -p ~/data/
-ln -s /ssd/yagi/data/ ~/data/videos  # GOPRXXXX folder should be in "videos" folder, but I forgot to do that
-export TRAJ_DATA_DIR=~/data >> ~/.bashrc
+# Test data
+python utils/create_dataset.py utils/id_test.txt --traj_length 20 --traj_skip 2 --nb_splits 5 --seed 1701 --traj_skip_test 5
+# All data
+python utils/create_dataset.py utils/id_list_20.txt --traj_length 20 --traj_skip 2 --nb_splits 5 --seed 1701 --traj_skip_test 5
 ```
 
-## Directory structure
+### Prepare training script
+Modify the "in_data" arguments in scripts/5fold.json.
 
+## Running the code
+### Directory structure
+```
     .
-    +---external
-    +---rnn_ed
-    |   +---(build)
-    |   +---src
-    |   +--CMakeLists.txt
-    |   +---python
-    +---rnn_ed_scene
-    +---direct (current main directory)
-    |   +---outputs (normal experiment output)
-    |   +---experiments (when using run.py)
+    +---data (feature files)
+    +---dataset (processed data)
+    +---experiments (logging)
+    +---gen_scripts (automatically generated scripts for cross validation)
+    +---models
+    +---scripts (configuration)
+    |   +---5fold.json
     +---utils
-    
-## How to run
-### Dataset preparation
-Ask Yagi to get Dataset file (includes input/output feature, without image data)
+        +---run.py (training script)
+        +---eval.py (evaluation script)
+```
 
 ### Training
-#### Train indivisually (result will be written in output/ directory)
+In our environment (a single TITAN X Pascal w/ CUDA 8, cuDNN 5.1), it took approximately 40 minutes per split.
 ```
-cd direct/
-python train.py --in_data dataset_video/front_id_list_10_171003_012633_20.joblib --nb_train 1000 --nb_iters 100 --height 960 --gpu 0 --iter_snapshot 50 --debug --nb_units 16  --model srnn
-```
-
-#### Train by script
-First, edit script file to specify conditions to run
-```
-vim script/test_script.json
+# Train proposed model and ablation models
+python utils/run.py scripts/5fold.json run <gpu id>
+# Train proposed model only
+python utils/run.py scripts/5fold_proposed_only.json run <gpu id>
 ```
 
-Script example:
+### Evaluation
 ```
-{
-    "script_name": "train.py",
-    "comment": "Check effect of dataset size",
-    "fixed_args": {
-        "in_data": "dataset_video/id_list_10_171003_012437_20.joblib",
-        "nb_iters": 30000,
-        "iter_snapshot": 3000,
-        "gpu": 0,
-        "unit_type": "NStepGRU",
-        "rnn_dropout": 0.3,
-        "nb_layers": 2,
-        "optimizer": "adam",
-        "height": 960,
-        "batch_size": 32,
-        "save_model": "",
-        "nb_units": 32,
-        "model": "srnn"
-    },
-    "dynamic_args": {
-        "nb_train": [1000, 2000, 5000, 10000, 20000, -1]
-    }
+python utils/eval.py experiments/5fold_yymmss_HHMMSS/ 17000 run <gpu id> 10
+```
+
+## Citation
+Takuma Yagi, Karrtikeya Mangalam, Ryo Yonetani and Yoichi Sato. Future Person Localization in First-Person Videos. In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. 2018.
+```
+@InProceedings{yagi2018future,
+    title={Future Person Localization in First-Person Videos},
+    author={Yagi, Takuma and Mangalam, Karttikeya and Yonetani, Ryo and Sato, Yoichi},
+    booktitle={The IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+    year={2018}
 }
-```
-
-Test script (to check the contents of the generated commands)
-```
-python run.py scripts/size_test.json test
-```
-
-```
-python -u train.py --root_dir experiments/size_test_171004_232619 --optimizer adam --nb_iters 30000 --save_model  --iter_snapshot 3000 --rnn_dropout 0.3 --batch_size 32 --height 960 --unit_type NStepGRU --gpu 1 --model srnn --nb_units 32 --nb_layers 2 --in_data dataset_video/id_list_10_171003_012437_20.joblib --nb_train 1000 
-python -u train.py --root_dir experiments/size_test_171004_232619 --optimizer adam --nb_iters 30000 --save_model  --iter_snapshot 3000 --rnn_dropout 0.3 --batch_size 32 --height 960 --unit_type NStepGRU --gpu 1 --model srnn --nb_units 32 --nb_layers 2 --in_data dataset_video/id_list_10_171003_012437_20.joblib --nb_train 2000 
-python -u train.py --root_dir experiments/size_test_171004_232619 --optimizer adam --nb_iters 30000 --save_model  --iter_snapshot 3000 --rnn_dropout 0.3 --batch_size 32 --height 960 --unit_type NStepGRU --gpu 1 --model srnn --nb_units 32 --nb_layers 2 --in_data dataset_video/id_list_10_171003_012437_20.joblib --nb_train 5000 
-python -u train.py --root_dir experiments/size_test_171004_232619 --optimizer adam --nb_iters 30000 --save_model  --iter_snapshot 3000 --rnn_dropout 0.3 --batch_size 32 --height 960 --unit_type NStepGRU --gpu 1 --model srnn --nb_units 32 --nb_layers 2 --in_data dataset_video/id_list_10_171003_012437_20.joblib --nb_train 10000 
-python -u train.py --root_dir experiments/size_test_171004_232619 --optimizer adam --nb_iters 30000 --save_model  --iter_snapshot 3000 --rnn_dropout 0.3 --batch_size 32 --height 960 --unit_type NStepGRU --gpu 1 --model srnn --nb_units 32 --nb_layers 2 --in_data dataset_video/id_list_10_171003_012437_20.joblib --nb_train 20000 
-python -u train.py --root_dir experiments/size_test_171004_232619 --optimizer adam --nb_iters 30000 --save_model  --iter_snapshot 3000 --rnn_dropout 0.3 --batch_size 32 --height 960 --unit_type NStepGRU --gpu 1 --model srnn --nb_units 32 --nb_layers 2 --in_data dataset_video/id_list_10_171003_012437_20.joblib --nb_train -1 
-Test finished
-```
-
-Run 
-```
-python run.py scripts/size_test.json run
 ```
