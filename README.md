@@ -22,21 +22,23 @@ We confirmed the code works correctly in below versions.
 - numba 0.36.2
 - python-box 3.2.0
 
-
 ## Installation
 ### Download data
 You can download our dataset from below link:  
 **(caution: no raw image provided!)**  
-WIP
+[Download link (processed data)](https://drive.google.com/open?id=10_ivX4bEMgJDWhVruZr2bozcuDoTcHZu)
 
-```
-# WIP
-```
+If you wish downloading via terminal, consider using [custom script](https://gist.github.com/darencard/079246e43e3c4b97e373873c6c9a3798).
 
 Since we cannot release the raw images, we prepared sample visualization video below.  
-<img src="https://github.com/takumayagi/fpl/blob/image/ezgif-1-9c3c383428.gif">
+The video shows the automatically extracted location histories, poses. The number shown in the bounding box corresponds to the person id in the processed data.    
+Background colors are the result from pre-trained dilated CNN trained with [MIT Scene Parsing Benchmark](http://sceneparsing.csail.mit.edu/).
+<img src="https://github.com/takumayagi/fpl/blob/image/ezgif-1-9c3c383428.gif">  
+[Download link (visualization)](https://drive.google.com/open?id=1fSNN8Yxi3edSHKqg6h1lZEEIqjfexkq2)
 
 ### Create dataset
+Run dataset generation script to preprocess raw locations/poses/egomotions.  
+A single processed file will be generated in datasets/.
 ```
 # Test data
 python utils/create_dataset.py utils/id_test.txt --traj_length 20 --traj_skip 2 --nb_splits 5 --seed 1701 --traj_skip_test 5
