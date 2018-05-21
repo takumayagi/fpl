@@ -24,7 +24,7 @@
         "lr_step_list": [5000, 10000, 15000]
     },
     "dynamic_args": {
-        "model": ["cnn_ego_pose_scale", "cnn_scale", "cnn_ego_scale", "cnn_pose_scale"]
+        "model": ["cnn_ego_pose_scale"]
     },
     "cv": 5
 }

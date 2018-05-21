@@ -26,6 +26,8 @@ class CNNBase(chainer.Chain):
         self._std = std
         self.nb_inputs = len(mean)
         self.target_idx = -1
+
+        # Send mean and sd of the dataset to GPU to produce prdiction result in the image coordinate
         self.mean = Variable(cuda.to_gpu(mean.astype(np.float32), gpu))
         self.std = Variable(cuda.to_gpu(std.astype(np.float32), gpu))
 
@@ -38,18 +40,19 @@ class CNNBase(chainer.Chain):
                 egomotions = F.expand_dims(egomotions, 0)
             poses = F.expand_dims(poses, 0)
 
-        # Pos
+        # Locations
+        # Note: prediction target is displacement from last input
         x = (pos_x - F.broadcast_to(self.mean, pos_x.shape)) / F.broadcast_to(self.std, pos_x.shape)
         y = (pos_y - F.broadcast_to(self.mean, pos_y.shape)) / F.broadcast_to(self.std, pos_y.shape)
         y = y - F.broadcast_to(x[:, -1:, :], pos_y.shape)
 
-        # Ego
+        # Egomotions
         past_len = pos_x.shape[1]
         if egomotions is not None:
             ego_x = egomotions[:, :past_len, :]
             ego_y = egomotions[:, past_len:, :]
 
-        # Pose
+        # Poses
         poses = F.reshape(poses, (poses.shape[0], poses.shape[1], -1))
         pose_x = poses[:, :past_len, :]
         pose_y = poses[:, past_len:, :]
@@ -64,6 +67,9 @@ class CNNBase(chainer.Chain):
 
 
 class CNN(CNNBase):
+    """
+    Baseline: location only
+    """
     def __init__(self, mean, std, gpu, channel_list, dc_channel_list, ksize_list,
                  dc_ksize_list, inter_list, last_list, pad_list):
         super(CNN, self).__init__(mean, std, gpu)
@@ -93,6 +99,9 @@ class CNN(CNNBase):
 
 
 class CNN_Ego(CNNBase):
+    """
+    Baseline: feeds locations and egomotions
+    """
     def __init__(self, mean, std, gpu, channel_list, dc_channel_list, ksize_list,
                  dc_ksize_list, inter_list, last_list, pad_list, ego_type):
         super(CNN_Ego, self).__init__(mean, std, gpu)
@@ -126,6 +135,9 @@ class CNN_Ego(CNNBase):
 
 
 class CNN_Pose(CNNBase):
+    """
+    Baseline: feeds locations and poses
+    """
     def __init__(self, mean, std, gpu, channel_list, dc_channel_list, ksize_list,
                  dc_ksize_list, inter_list, last_list, pad_list):
         super(CNN_Pose, self).__init__(mean, std, gpu)
@@ -158,6 +170,9 @@ class CNN_Pose(CNNBase):
 
 
 class CNN_Ego_Pose(CNNBase):
+    """
+    Our full model: feeds locations, egomotions and poses as input
+    """
     def __init__(self, mean, std, gpu, channel_list, dc_channel_list, ksize_list,
                  dc_ksize_list, inter_list, last_list, pad_list, ego_type):
         super(CNN_Ego_Pose, self).__init__(mean, std, gpu)

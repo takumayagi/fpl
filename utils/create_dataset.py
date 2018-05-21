@@ -53,15 +53,18 @@ def read_gridflow(ego_path, flip):
 
 def read_vid_list(indir_list):
     vid_list, nb_image_list = [], []
+    blacklist = {}
     with open(indir_list) as f:
         for line in f:
-            strs = line.strip("\n").split(" ")
+            strs = line.strip("\n").split(",")
             if strs[0].startswith("#"):
                 continue
             vid_list.append(strs[0])
             nb_image_list.append(int(strs[1]))
+            if len(strs) > 2:
+                blacklist[strs[0]] = strs[2:]
 
-    return vid_list, nb_image_list
+    return vid_list, nb_image_list, blacklist
 
 
 if __name__ == "__main__":
@@ -93,7 +96,7 @@ if __name__ == "__main__":
         args.traj_skip, args.traj_skip_test)
     h, w = args.height, args.width
 
-    vid_list, nb_image_list = read_vid_list(args.indir_list)
+    vid_list, nb_image_list, blacklist = read_vid_list(args.indir_list)
     print("Number of videos: {}".format(len(vid_list)))
 
     shuffled_ids = np.copy(vid_list)
@@ -140,6 +143,9 @@ if __name__ == "__main__":
         # pid search
         pids = []
         for pid, info in trajectory_dict.items():
+            if video_id in blacklist and pid in blacklist[video_id]:
+                print("Blacklist: {} {}".format(video_id, pid))
+                continue
             if "traj_sm" not in info:
                 continue
             traj = info["traj_sm"]

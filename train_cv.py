@@ -128,11 +128,11 @@ if __name__ == "__main__":
             pred_list = [[pred for vk, v_dict in sorted(predictions.items())
                           for fk, f_dict in sorted(v_dict.items())
                           for pk, pred in sorted(f_dict.items()) if pred[8] == idx] for idx in range(4)]
-            logger.info([len(x) for x in pred_list])
-            error_rates = [np.mean([pred[7] for pred in preds]) for preds in pred_list]
-            logger.info(error_rates)
-            prediction_path = os.path.join(save_dir, "prediction.json")
 
+            error_rates = [np.mean([pred[7] for pred in preds]) for preds in pred_list]
+            logger.info("Towards {} / Away {} / Across {} / Other {}".format(*error_rates))
+
+            prediction_path = os.path.join(save_dir, "prediction.json")
             with open(prediction_path, "w") as f:
                 json.dump(prediction_dict, f)
 
