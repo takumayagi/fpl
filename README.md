@@ -1,7 +1,7 @@
 ## Future Person Localization in First-Person Videos (CVPR2018)
 <img src="https://github.com/takumayagi/fpl/blob/image/cvpr18_teaser.png" width="80%" height="80%">
 
-This repository contains the code and data (**caution: no raw image provided**) for the paper "Future Person Localization in First-Person Videos" by Takuma Yagi, Karttikeya Mangalam, Ryo Yonetani and Yoichi Sato.
+This repository contains the code and data (**caution: no raw image provided**) for the paper ["Future Person Localization in First-Person Videos"](https://arxiv.org/abs/1711.11217) by Takuma Yagi, Karttikeya Mangalam, Ryo Yonetani and Yoichi Sato.
 
 ## Prediction examples
 <img src="https://github.com/takumayagi/fpl/blob/image/001.gif" width="20%" height="20%"><img src="https://github.com/takumayagi/fpl/blob/image/002.gif" width="20%" height="20%"><img src="https://github.com/takumayagi/fpl/blob/image/003.gif" width="20%" height="20%"><img src="https://github.com/takumayagi/fpl/blob/image/004.gif" width="20%" height="20%"><img src="https://github.com/takumayagi/fpl/blob/image/005.gif" width="20%" height="20%">
@@ -79,4 +79,15 @@ python utils/run.py scripts/5fold.json run <gpu id>
 ### Evaluation
 ```
 python utils/eval.py experiments/5fold_yymmss_HHMMSS/ 17000 run <gpu id> 10
+```
+
+## Citation
+Takuma Yagi, Karrtikeya Mangalam, Ryo Yonetani and Yoichi Sato. Future Person Localization in First-Person Videos. In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. 2018.
+```
+@InProceedings{yagi2018future
+    title={Future Person Localization in First-Person Videos},
+    author={Yagi, Takuma and Mangalam, Karttikeya and Yonetani, Ryo and Sato, Yoichi},
+    booktitle={The IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+    year={2018}
+}
 ```
