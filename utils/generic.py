@@ -23,7 +23,6 @@ def get_args():
     # Data
     parser.add_argument('--in_data', type=str)
     parser.add_argument('--nb_train', type=int, default=-1)
-    parser.add_argument('--datatype', type=str, default="disp")
     parser.add_argument('--nb_jobs', type=int, default=8)
     parser.add_argument('--nb_splits', type=int, default=5)
     parser.add_argument('--eval_split', type=int, default=0)
@@ -33,8 +32,6 @@ def get_args():
     parser.add_argument('--input_len', type=int, default=10)
     parser.add_argument('--offset_len', type=int, default=10)
     parser.add_argument('--pred_len', type=int, default=10)
-
-    # CNN
     parser.add_argument('--inter_list', type=int, nargs="*", default=[])
     parser.add_argument('--last_list', type=int, nargs="*", default=[])
     parser.add_argument('--channel_list', type=int, nargs="*", default=[])
@@ -43,10 +40,9 @@ def get_args():
     parser.add_argument('--dc_ksize_list', type=int, nargs="*", default=[])
     parser.add_argument('--pad_list', type=int, nargs="*", default=[])
 
-    # Learning
+    # Training
     parser.add_argument('--nb_iters', type=int, default=10000)
     parser.add_argument('--iter_snapshot', type=int, default=1000)
-    parser.add_argument('--iter_visualize', type=int, default=10000)
     parser.add_argument('--iter_display', type=int, default=100)
     parser.add_argument('--batch_size', type=int, default=32)
     parser.add_argument('--optimizer', type=str, default="adam")
@@ -65,13 +61,14 @@ def get_args():
     parser.add_argument('--nb_grids', type=int, default=6)
     parser.add_argument('--seed', type=int, default=1701)
     parser.add_argument('--ego_type', type=str, default="sfm")
+
     return parser.parse_args()
 
 
 def get_model(args):
     mean = np.array([640., 476.23620605, 88.2875590389])
     std = np.array([227.59802246, 65.00177002, 52.7303319245])
-    if "scale" in args.model:
+    if "scale" not in args.model:
         mean, std = mean[:2], std[:2]
 
     logger.info("Mean: {}, std: {}".format(mean, std))
@@ -90,6 +87,7 @@ def get_model(args):
     else:
         logger.info("Invalid argument: model={}".format(args.model))
         exit(1)
+
     if args.resume != "":
         serializers.load_npz(args.resume, model)
 
@@ -102,6 +100,8 @@ def get_model(args):
 def write_prediction(pred_dict, batch, pred_y):
     for idx, (sample, py) in enumerate(zip(batch, pred_y)):
         past, ground_truth, pose, vid, frame, pid, flipped, egomotion, scale, mag, size = sample
+        frame, pid = str(frame), str(pid)
+
         err = np.linalg.norm(py - ground_truth, axis=1)[-1]
         front_cnt = sum([1 if ps[11][0] - ps[8][0] > 0 else 0 for ps in pose])
         hip_dist = np.mean([np.abs(ps[11, 0] - ps[8, 0]) for ps in pose])
@@ -123,5 +123,5 @@ def write_prediction(pred_dict, batch, pred_y):
             pred_dict[vid][frame] = {}
 
         result = [vid, frame, pid, flipped, py, None, None, err, traj_type]
-        result = map(lambda x: x.tolist() if type(x).__module__ == "numpy" else x, result)
+        result = list(map(lambda x: x.tolist() if type(x).__module__ == "numpy" else x, result))
         pred_dict[vid][frame][pid] = result

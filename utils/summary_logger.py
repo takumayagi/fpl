@@ -15,8 +15,7 @@ import argparse
 
 def get_commit_id():
     cmd = "git log -n 1 --format=%H"
-    out = subprocess.check_output( cmd.split(" "))
-    assert isinstance(out, str)
+    out = subprocess.check_output(cmd.split(" ")).decode('utf-8')
     return out.rstrip("\r\n")
 
 class SummaryLogger(object):

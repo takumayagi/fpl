@@ -45,7 +45,7 @@ class Evaluator(object):
         self.ade += np.mean(mse) * batch_size
 
         mse = calc_mse(pred_y[:, -1, :2], true_y[:, -1, :2])
-        self.fde += np.mean(mse, axis=1) * batch_size
+        self.fde += np.mean(mse) * batch_size
 
         self.cnt += batch_size
 

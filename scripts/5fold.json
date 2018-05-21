@@ -1,0 +1,32 @@
+{
+    "script_name": "train_cv.py",
+    "test_args":{
+        "in_data": "dataset/id_test_180521_162747_20_sp5_2_5.joblib",
+        "nb_iters": 120,
+        "iter_snapshot": 120,
+        "iter_visualize": 120,
+        "nb_jobs": 1
+    },
+    "fixed_args": {
+        "in_data": "dataset/id_list_20_180521_161822_20_sp5_2_5.joblib",
+        "nb_iters": 17000,
+        "iter_snapshot": 1000,
+        "iter_visualize": 17000,
+        "optimizer": "adam",
+        "height": 960,
+        "batch_size": 64,
+        "save_model": "",
+        "nb_train": -1,
+        "pred_len": 10,
+        "channel_list": [32, 64, 128, 128],
+        "deconv_list": [256, 128, 64, 32],
+        "ksize_list": [3, 3, 3, 3],
+        "inter_list": [256],
+        "input_len": 10,
+        "lr_step_list": [5000, 10000, 15000]
+    },
+    "dynamic_args": {
+        "model": ["cnn_ego_pose_scale", "cnn_scale", "cnn_ego_scale", "cnn_pose_scale"]
+    },
+    "cv": 5
+}

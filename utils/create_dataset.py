@@ -179,7 +179,7 @@ if __name__ == "__main__":
                 person_ids.append(pid)
                 trajectories.append(traj[tidx:tidx+args.traj_length])
                 poses.append(pose[tidx:tidx+args.traj_length])
-                splits.append(split_dict[video_id])
+                splits.append(split)
                 video_ids.append(video_id)
 
                 turn_mags.append(turn_mag)
@@ -212,7 +212,6 @@ if __name__ == "__main__":
     print(result_str)
     print("Number of tracklets:", nb_trajs)
     print("Number of samples:", nb_traj_list)
-
     if not args.debug:
         joblib.dump({
             "video_ids": np.array(video_ids),

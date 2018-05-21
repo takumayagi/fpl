@@ -54,13 +54,15 @@ if __name__ == "__main__":
                                     args.width, args.height, data_dir, valid_split, -1,
                                     False, "scale" in args.model, args.ego_type)
     logger.info(valid_dataset.X.shape)
+
+    # X: input, Y: output, poses, egomotions
     data_idxs = [0, 1, 2, 7]
     if data_idxs is None:
         logger.info("Invalid argument: model={}".format(args.model))
         exit(1)
 
     model = get_model(args)
-    valid_iterator = iterators.MultiprocessIterator(valid_dataset, args.batch_size, False, False, n_processes=args.nb_jobs)
+    valid_iterator = iterators.MultithreadIterator(valid_dataset, args.batch_size, False, False, n_threads=args.nb_jobs)
     valid_eval = Evaluator_Direct("valid", args)
 
     prediction_dict = {

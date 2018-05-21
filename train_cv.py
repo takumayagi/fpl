@@ -48,9 +48,8 @@ if __name__ == "__main__":
     traj_len = data["trajectories"].shape[1]
 
     # Load training data
-    train_splits = filter(lambda x: x != args.eval_split, range(args.nb_splits))
+    train_splits = list(filter(lambda x: x != args.eval_split, range(args.nb_splits)))
     valid_split = args.eval_split + args.nb_splits
-
     train_dataset = SceneDatasetCV(data, args.input_len, args.offset_len, args.pred_len,
                                    args.width, args.height, data_dir, train_splits, args.nb_train,
                                    True, "scale" in args.model, args.ego_type)
@@ -59,6 +58,8 @@ if __name__ == "__main__":
                                    args.width, args.height, data_dir, valid_split, -1,
                                    False, "scale" in args.model, args.ego_type)
     logger.info(valid_dataset.X.shape)
+
+    # X: input, Y: output, poses, egomotions
     data_idxs = [0, 1, 2, 7]
     if data_idxs is None:
         logger.info("Invalid argument: model={}".format(args.model))
@@ -70,9 +71,9 @@ if __name__ == "__main__":
     optimizer.add_hook(chainer.optimizer.WeightDecay(1e-4))
     scheduler = AdamScheduler(optimizer, 0.5, args.lr_step_list, 0)
 
-    train_iterator = iterators.MultiprocessIterator(train_dataset, args.batch_size, n_processes=args.nb_jobs)
+    train_iterator = iterators.MultithreadIterator(train_dataset, args.batch_size, n_threads=args.nb_jobs)
     train_eval = Evaluator("train", args)
-    valid_iterator = iterators.MultiprocessIterator(valid_dataset, args.batch_size, False, False, n_processes=args.nb_jobs)
+    valid_iterator = iterators.MultithreadIterator(valid_dataset, args.batch_size, False, False, n_threads=args.nb_jobs)
     valid_eval = Evaluator("valid", args)
 
     logger.info("Training...")
@@ -94,6 +95,7 @@ if __name__ == "__main__":
         scheduler.update()
         train_eval.update(cuda.to_cpu(loss.data), pred_y, batch)
 
+        # Validation & report
         if (iter_cnt + 1) % args.iter_snapshot == 0:
             logger.info("Validation...")
             if args.save_model:
@@ -130,6 +132,7 @@ if __name__ == "__main__":
             error_rates = [np.mean([pred[7] for pred in preds]) for preds in pred_list]
             logger.info(error_rates)
             prediction_path = os.path.join(save_dir, "prediction.json")
+
             with open(prediction_path, "w") as f:
                 json.dump(prediction_dict, f)
 
