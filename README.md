@@ -25,13 +25,16 @@ We confirmed the code works correctly in below versions.
 
 ## Installation
 ### Download data
-You can download our dataset from below link:
-**(caution: no raw image provided!)**
+You can download our dataset from below link:  
+**(caution: no raw image provided!)**  
 WIP
 
 ```
 # WIP
 ```
+
+Since we cannot release the raw images, we prepared sample visualization video below.  
+<img src="https://github.com/takumayagi/fpl/blob/image/ezgif-1-9c3c383428.gif">
 
 ### Create dataset
 ```
