@@ -30,6 +30,12 @@ You can download our dataset from below link:
 
 If you wish downloading via terminal, consider using [custom script](https://gist.github.com/darencard/079246e43e3c4b97e373873c6c9a3798).
 
+Extract the downloaded tar.gz file at the root directory.
+```
+tar xvf fpl.tar.gz
+```
+
+### Visualization
 Since we cannot release the raw images, we prepared sample visualization video below.  
 The video shows the automatically extracted location histories, poses. The number shown in the bounding box corresponds to the person id in the processed data.    
 Background colors are the result from pre-trained dilated CNN trained with [MIT Scene Parsing Benchmark](http://sceneparsing.csail.mit.edu/).
@@ -49,12 +55,28 @@ python utils/create_dataset.py utils/id_list_20.txt --traj_length 20 --traj_skip
 ### Prepare training script
 Modify the "in_data" arguments in scripts/5fold.json.
 
-## Training
+## Running the code
+### Directory structure
+```
+    .
+    +---data (feature files)
+    +---dataset (processed data)
+    +---experiments (logging)
+    +---gen_scripts (automatically generated scripts for cross validation)
+    +---models
+    +---scripts (configuration)
+    |   +---5fold.json
+    +---utils
+        +---run.py (training script)
+        +---eval.py (evaluation script)
+```
+
+### Training
 ```
 python utils/run.py scripts/5fold.json run <gpu id>
 ```
 
-## Evaluation
+### Evaluation
 ```
 python utils/eval.py experiments/5fold_yymmss_HHMMSS/ 17000 run <gpu id> 10
 ```
