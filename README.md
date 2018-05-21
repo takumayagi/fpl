@@ -72,8 +72,12 @@ Modify the "in_data" arguments in scripts/5fold.json.
 ```
 
 ### Training
+In our environment (a single TITAN X Pascal w/ CUDA 8, cuDNN 5.1), it took approximately 40 minutes per split.
 ```
+# Train proposed model and ablation models
 python utils/run.py scripts/5fold.json run <gpu id>
+# Train proposed model only
+python utils/run.py scripts/5fold_proposed_only.json run <gpu id>
 ```
 
 ### Evaluation
