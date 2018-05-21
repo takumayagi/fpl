@@ -88,7 +88,7 @@ python utils/eval.py experiments/5fold_yymmss_HHMMSS/ 17000 run <gpu id> 10
 ## Citation
 Takuma Yagi, Karrtikeya Mangalam, Ryo Yonetani and Yoichi Sato. Future Person Localization in First-Person Videos. In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. 2018.
 ```
-@InProceedings{yagi2018future
+@InProceedings{yagi2018future,
     title={Future Person Localization in First-Person Videos},
     author={Yagi, Takuma and Mangalam, Karttikeya and Yonetani, Ryo and Sato, Yoichi},
     booktitle={The IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
