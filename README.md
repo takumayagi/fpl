@@ -85,7 +85,9 @@ python utils/run.py scripts/5fold_proposed_only.json run <gpu id>
 python utils/eval.py experiments/5fold_yymmss_HHMMSS/ 17000 run <gpu id> 10
 ```
 
-## Citation
+## License and Citation
+The dataset provided in this repository is only to be used for non-commercial scientic purposes. If you used this dataset in scientic publication, cite the following paper:
+
 Takuma Yagi, Karrtikeya Mangalam, Ryo Yonetani and Yoichi Sato. Future Person Localization in First-Person Videos. In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. 2018.
 ```
 @InProceedings{yagi2018future,
