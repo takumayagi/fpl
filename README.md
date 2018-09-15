@@ -88,7 +88,7 @@ python utils/eval.py experiments/5fold_yymmss_HHMMSS/ 17000 run <gpu id> 10
 ### Prediction visualization using pseudo-video
 We provided visualization code using pseudo-video.  
 Download below pseudo-videos and run the following code:  
-[Download link (pseudo-video for visualization)](https://drive.google.com/open?id=1M2bpni682fffaeIeT79Ara26hNZMtpMX)  
+[Download link (pseudo-videos for visualization)](https://drive.google.com/open?id=1M2bpni682fffaeIeT79Ara26hNZMtpMX)  
 
 ```
 # Run this code after placing <video_id>.mp4 into data/pseudo_viz/
