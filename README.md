@@ -35,18 +35,18 @@ Extract the downloaded tar.gz file at the root directory.
 tar xvf fpl.tar.gz
 ```
 
-### Visualization
-Since we cannot release the raw images, we prepared sample visualization video below.  
+### Pseudo-video
+Since we cannot release the raw images, we prepared sample pseudo-video below.  
 The video shows the automatically extracted location histories, poses. The number shown in the bounding box corresponds to the person id in the processed data.    
 Background colors are the result from pre-trained dilated CNN trained with [MIT Scene Parsing Benchmark](http://sceneparsing.csail.mit.edu/).
 <img src="https://github.com/takumayagi/fpl/blob/image/ezgif-1-9c3c383428.gif">  
-[Download link (visualization)](https://drive.google.com/open?id=1fSNN8Yxi3edSHKqg6h1lZEEIqjfexkq2)
+[Download link (pseudo-video)](https://drive.google.com/open?id=1fSNN8Yxi3edSHKqg6h1lZEEIqjfexkq2)
 
 ### Create dataset
 Run dataset generation script to preprocess raw locations/poses/egomotions.  
 A single processed file will be generated in datasets/.
 ```
-# Test data
+# Test (debug) data
 python utils/create_dataset.py utils/id_test.txt --traj_length 20 --traj_skip 2 --nb_splits 5 --seed 1701 --traj_skip_test 5
 # All data
 python utils/create_dataset.py utils/id_list_20.txt --traj_length 20 --traj_skip 2 --nb_splits 5 --seed 1701 --traj_skip_test 5
@@ -83,6 +83,21 @@ python utils/run.py scripts/5fold_proposed_only.json run <gpu id>
 ### Evaluation
 ```
 python utils/eval.py experiments/5fold_yymmss_HHMMSS/ 17000 run <gpu id> 10
+```
+
+### Prediction visualization using pseudo-video
+We provided visualization code using pseudo-video.  
+Download below pseudo-videos and run the following code:  
+[Download link (pseudo-video for visualization)](https://drive.google.com/open?id=1M2bpni682fffaeIeT79Ara26hNZMtpMX)  
+
+```
+# Run this code after placing <video_id>.mp4 into data/pseudo_viz/
+# Extract images from video
+python utils/video2img_all.py data/pseudo_viz/
+# Plot images
+python utils/plot_prediction.py <experiment>/<fold> --traj_type 0
+# Write videos
+python utils/write_video.py <experiment>/<fold> --vid GOPRXXXXU20 --frame XXXX --pid XXX
 ```
 
 ## License and Citation
