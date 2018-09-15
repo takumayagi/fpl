@@ -74,9 +74,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
     start = time.time()
 
-    if not os.path.exists(args.output_dir):
-        os.makedirs(args.output_dir)
-
     data_dir = "data"
     logger.initialize(args.output_dir, debug=args.debug)
     logger.info(vars(args))
