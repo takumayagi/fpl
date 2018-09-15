@@ -43,7 +43,7 @@ if __name__ == "__main__":
     summary = SummaryLogger(args, logger, os.path.join(args.root_dir, "summary.csv"))
     summary.update("finished", 0)
 
-    data_dir = os.getenv("TRAJ_DATA_DIR")
+    data_dir = "data"
     data = joblib.load(args.in_data)
     traj_len = data["trajectories"].shape[1]
 

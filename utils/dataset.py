@@ -132,3 +132,45 @@ class SceneDatasetCV(dataset_mixin.DatasetMixin):
 
         return X, Y, poses, self.video_ids[i], self.frames[i], self.person_ids[i], \
             horizontal_flip, egomotions, self.scales[i], self.turn_mags[i], self.scales_all[i]
+
+
+class SceneDatasetForAnalysis(dataset_mixin.DatasetMixin):
+    """
+    Dataset class only for plot
+    """
+    def __init__(self, data, input_len, offset_len, pred_len, width, height):
+
+        self.X, self.Y, self.video_ids, self.frames, self.person_ids, \
+            raw_poses, self.turn_mags, self.trans_mags, self.masks, self.offset = \
+            parse_data_CV(data, list(range(5, 10, 1)), input_len, offset_len, pred_len, -1)
+
+        # (N, T, D, 3)
+        past_len = input_len
+        poses = raw_poses[:, :, :, :2]
+        spine = (poses[:, :, 8:9, :2] + poses[:, :, 11:12, :2]) / 2
+        neck = poses[:, :, 1:2, :2]
+        sizes = np.linalg.norm(neck - spine, axis=3)  # (N, T, 1)
+        poses = (poses - spine) / sizes[:, :, :, np.newaxis]  # Normalization
+
+        self.poses = poses.astype(np.float32)
+        self.sizes = sizes[:, :, 0].astype(np.float32)
+        self.scales = self.sizes[:, -pred_len-1]
+
+        self.X = np.concatenate((self.X, self.sizes[:, :past_len, np.newaxis]), axis=2)
+        self.Y = np.concatenate((self.Y, self.sizes[:, past_len:past_len+pred_len, np.newaxis]), axis=2)
+
+        self.width = width
+        self.height = height
+        self.nb_inputs = self.X.shape[2]
+
+    def __len__(self):
+        return len(self.frames)
+
+    def get_example(self, i):
+
+        X = self.X[i].copy()
+        Y = self.Y[i].copy()
+        poses = self.poses[i].copy()
+
+        return X, Y, poses, self.video_ids[i], self.frames[i], self.person_ids[i], \
+            self.scales[i], self.turn_mags[i], self.sizes[i]
