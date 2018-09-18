@@ -101,7 +101,7 @@ python utils/write_video.py <experiment>/<fold> --vid GOPRXXXXU20 --frame XXXX -
 ```
 
 ## License and Citation
-The dataset provided in this repository is only to be used for non-commercial scientic purposes. If you used this dataset in scientic publication, cite the following paper:
+The dataset provided in this repository is only to be used for non-commercial scientific purposes. If you used this dataset in scientific publication, cite the following paper:
 
 Takuma Yagi, Karrtikeya Mangalam, Ryo Yonetani and Yoichi Sato. Future Person Localization in First-Person Videos. In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition. 2018.
 ```
