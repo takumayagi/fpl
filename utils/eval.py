@@ -27,7 +27,7 @@ def add_str(x, y, end=False):
 if __name__ == "__main__":
 
     if len(sys.argv) < 5:
-        print("Usage: python eval.py <experiment_dir> <iter> run/test <gpu_id> <pred_len>")
+        print("Usage: python utils/eval.py <experiment_dir> <iter> run/test <gpu_id> <pred_len>")
         exit(1)
 
     dirname = sys.argv[1][:-1] if sys.argv[1].endswith("/") else sys.argv[1]
@@ -50,7 +50,7 @@ if __name__ == "__main__":
         for idx, line in enumerate(f):
             if idx <= 1:
                 continue
-            commands.append(line)
+            commands.append(line.replace('train_cv.py', 'eval_cv.py'))
 
     date = datetime.datetime.now()
     out_id = experiment_id + date.strftime("_%y%m%d_%H%M%S")
@@ -67,13 +67,12 @@ if __name__ == "__main__":
             continue
         model_path = os.path.join(rdir, "model_{}.npz".format(eval_iter))
         out_command = add_str(
-            cmd.strip("\n"), "--root_dir {} --resume {} --eval".format(os.path.join("evaluations", out_id), model_path))
+            cmd.strip("\n"), "--root_dir {} --resume {}".format(os.path.join("evaluations", out_id), model_path))
         if dataset_path is None:
             out_commands.append(out_command)
         else:
             out_commands.append(add_str(out_command, "--in_data {}".format(dataset_path)))
 
-    #out_commands = [add_str(cmd, "--gpu {} --debug".format(gpu_id)) for cmd in out_commands]
     out_commands = [add_str(cmd, "--gpu {} --debug --pred_len {}".format(gpu_id, pred_len)) for cmd in out_commands]
 
     if dataset is not None:

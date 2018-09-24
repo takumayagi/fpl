@@ -15,15 +15,13 @@ import joblib
 import numpy as np
 
 import chainer
-from chainer import Variable, optimizers, serializers, iterators, cuda
+from chainer import Variable, iterators, cuda
 from chainer.dataset import convert
 
 from utils.generic import get_args, get_model, write_prediction
 from utils.dataset import SceneDatasetCV
-from utils.plot import plot_trajectory_eval
 from utils.summary_logger import SummaryLogger
-from utils.scheduler import AdamScheduler
-from utils.evaluation import Evaluator_Direct
+from utils.evaluation import Evaluator
 
 from mllogger import MLLogger
 logger = MLLogger(init=False)
@@ -51,8 +49,8 @@ if __name__ == "__main__":
     # Load evaluation data
     valid_split = args.eval_split + args.nb_splits
     valid_dataset = SceneDatasetCV(data, args.input_len, args.offset_len, args.pred_len,
-                                    args.width, args.height, data_dir, valid_split, -1,
-                                    False, "scale" in args.model, args.ego_type)
+                                   args.width, args.height, data_dir, valid_split, -1,
+                                   False, "scale" in args.model, args.ego_type)
     logger.info(valid_dataset.X.shape)
 
     # X: input, Y: output, poses, egomotions
@@ -62,8 +60,6 @@ if __name__ == "__main__":
         exit(1)
 
     model = get_model(args)
-    valid_iterator = iterators.MultithreadIterator(valid_dataset, args.batch_size, False, False, n_threads=args.nb_jobs)
-    valid_eval = Evaluator_Direct("valid", args)
 
     prediction_dict = {
         "arguments": vars(args),

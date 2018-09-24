@@ -136,7 +136,7 @@ if __name__ == "__main__":
         img2 = cv2.imread(os.path.join(
             img_dir, "rgb_{:05d}.jpg".format(frame + sargs.input_len + sargs.pred_len - 1)))
 
-        for idx, im in enumerate([img1, img2]):
+        for idx, im in enumerate([img, img2]):
             # Past
             cv2.circle(im, (int(past[0][0]*1.0), int(past[0][1]*1.0)), thick_circle, color_ps, -1)
             im = draw_line(im, past, color_ps, 1.0, thick)
