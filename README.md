@@ -26,7 +26,7 @@ We confirmed the code works correctly in below versions.
 ### Download data
 You can download our dataset from below link:  
 **(caution: no raw image provided!)**  
-[Download link (processed data)](https://drive.google.com/open?id=10_ivX4bEMgJDWhVruZr2bozcuDoTcHZu)
+[Download link (processed data)](https://drive.google.com/file/d/1Px3f3_oJqzJT10TQfEPvxPvSllEF2LSz/view?usp=sharing)
 
 If you wish downloading via terminal, consider using [custom script](https://gist.github.com/darencard/079246e43e3c4b97e373873c6c9a3798).
 
@@ -40,7 +40,7 @@ Since we cannot release the raw images, we prepared sample pseudo-video below.
 The video shows the automatically extracted location histories, poses. The number shown in the bounding box corresponds to the person id in the processed data.    
 Background colors are the result from pre-trained dilated CNN trained with [MIT Scene Parsing Benchmark](http://sceneparsing.csail.mit.edu/).
 <img src="https://github.com/takumayagi/fpl/blob/image/ezgif-1-9c3c383428.gif">  
-[Download link (pseudo-video)](https://drive.google.com/open?id=1fSNN8Yxi3edSHKqg6h1lZEEIqjfexkq2)
+[Download link (pseudo-video)](https://drive.google.com/file/d/1mYIth2npDULSquVkYMbownMy7xJ8Tk1H/view?usp=sharing)
 
 ### Create dataset
 Run dataset generation script to preprocess raw locations/poses/egomotions.  
@@ -88,7 +88,7 @@ python utils/eval.py experiments/5fold_yymmss_HHMMSS/ 17000 run <gpu id> 10
 ### Prediction visualization using pseudo-video
 We provided visualization code using pseudo-video.  
 Download below pseudo-videos and run the following code:  
-[Download link (pseudo-videos for visualization)](https://drive.google.com/open?id=1M2bpni682fffaeIeT79Ara26hNZMtpMX)  
+[Download link (pseudo-videos for visualization)](https://drive.google.com/open?id=1akSmtlfIbEwlsy85iYb7s1U9e0zBeP1T)  
 
 ```
 # Run this code after placing <video_id>.mp4 into data/pseudo_viz/
