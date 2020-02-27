@@ -49,7 +49,7 @@ if __name__ == "__main__":
     # Load evaluation data
     valid_split = args.eval_split + args.nb_splits
     valid_dataset = SceneDatasetCV(data, args.input_len, args.offset_len, args.pred_len,
-                                   args.width, args.height, data_dir, valid_split, -1,
+                                   arg.width, args.height, data_dir, valid_split, -1,
                                    False, "scale" in args.model, args.ego_type)
     logger.info(valid_dataset.X.shape)
 
