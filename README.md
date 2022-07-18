@@ -4,7 +4,7 @@
 This repository contains the code and data (**caution: no raw image provided**) for the paper ["Future Person Localization in First-Person Videos"](https://arxiv.org/abs/1711.11217) by Takuma Yagi, Karttikeya Mangalam, Ryo Yonetani and Yoichi Sato.
 
 ## Prediction examples
-<img src="https://github.com/takumayagi/fpl/blob/image/001.gif" width="20%" height="20%"><img src="https://github.com/takumayagi/fpl/blob/image/002.gif" width="20%" height="20%"><img src="https://github.com/takumayagi/fpl/blob/image/003.gif" width="20%" height="20%"><img src="https://github.com/takumayagi/fpl/blob/image/004.gif" width="20%" height="20%"><img src="https://github.com/takumayagi/fpl/blob/image/005.gif" width="20%" height="20%">
+<img src="https://github.com/takumayagi/fpl/blob/image/001.gif" width="50%" height="50%"><img src="https://github.com/takumayagi/fpl/blob/image/002.gif" width="50%" height="50%"><img src="https://github.com/takumayagi/fpl/blob/image/003.gif" width="50%" height="50%"><img src="https://github.com/takumayagi/fpl/blob/image/004.gif" width="50%" height="50%"><img src="https://github.com/takumayagi/fpl/blob/image/005.gif" width="50%" height="50%">
 
 ## Requirements
 We confirmed the code works correctly in below versions.
