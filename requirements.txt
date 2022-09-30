@@ -1,7 +1,7 @@
 chainer==4.0.0
 numpy==1.13.1
 cython==0.25.1
-joblib==0.11
+joblib==1.2.0
 pandas==0.20.3
 numpy-quaternion==2018.5.17.10.19.59
 numba==0.36.2
